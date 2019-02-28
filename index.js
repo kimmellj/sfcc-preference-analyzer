@@ -32,7 +32,7 @@
  *       "ActiveLocales": {
  *         "group": "",
  *         "name": "",
- *         "all-instances": "de:de_AT:it_IT:fr_BE:fr:fr_FR:ja_JP:de_DE:default:en_NL:en_BE:en_FI:es_ES:fr_CA:en:it:es:zh:en_IE:en_GB:en_CA:en_US:ja:en_CH:zh_CN:nl",
+ *         "all-instances": "en:en_US:fr:fr_FR",
  *         "development": "",
  *         "staging": "",
  *         "production": ""
@@ -40,7 +40,7 @@
  *       "CustomCartridges": {
  *         "group": "",
  *         "name": "",
- *         "all-instances": "int_inRiver:int_bazaarvoice:bm_tools:bm_catalogreducer:int_customfeeds:bm_customfeeds:bc_library:bm_custom_plugin:bc_orderguard:bc_job_components:bm_csc_extension:bm_translation",
+ *         "all-instances": "app_brand_a_core:app_brand_b_core:app_brand_core",
  *         "development": "",
  *         "staging": "",
  *         "production": ""
@@ -49,8 +49,8 @@
  * }
  *
  * @example <caption>CSV / XLS Report</caption>
- * global,standard,,ActiveLocales,,de:de_AT:it_IT:fr_BE:fr:fr_FR:ja_JP:de_DE:default:en_NL:en_BE:en_FI:es_ES:fr_CA:en:it:es:zh:en_IE:en_GB:en_CA:en_US:ja:en_CH:zh_CN:nl,,,
- * global,standard,,CustomCartridges,,int_inRiver:int_bazaarvoice:bm_tools:bm_catalogreducer:int_customfeeds:bm_customfeeds:bc_library:bm_custom_plugin:bc_orderguard:bc_job_components:bm_csc_extension:bm_translation,,,
+ * global,standard,,ActiveLocales,,en:en_US:fr:fr_FR,,,
+ * global,standard,,CustomCartridges,,app_brand_a_core:app_brand_b_core:app_brand_core,,,
  * global,standard,,CustomProductListColumns,,custom.color:custom.refinementColor,,,
  * global,standard,,InstanceTimezone,,US/Eastern,,,
  */
@@ -63,12 +63,14 @@ const optimist = require('optimist'); // Handle the parameters passed to this sc
 
 const util = require('./util');
 
+const outputDirectory = path.join(__dirname, 'output');
+
 const schema = {
     properties: {
         folder: {
             message: 'Site Export / Import to analyze preferences for',
             required: true,
-            default: path.join(__dirname, '..', '..', 'sites', 'site_template')
+            default: path.join(__dirname, 'demo_data')
         },
         name: {
             pattern: /[A-Za-z0-9 \-_]/,

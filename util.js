@@ -341,7 +341,11 @@ function analyzeMeta(folder) {
                 let prefGroupID;
                 let prefGroupName;
 
-                typeExt['group-definitions']['attribute-group'].forEach((attrGroup) => {
+                //console.log(JSON.stringify(typeExt['group-definitions']['attribute-group'], null, 2));
+
+                const groups = Array.isArray(typeExt['group-definitions']['attribute-group']) ? typeExt['group-definitions']['attribute-group'] : [typeExt['group-definitions']['attribute-group']];
+
+                groups.forEach((attrGroup) => {
                     const groupID = attrGroup['_attributes']['group-id'];
                     const groupName = attrGroup['display-name']['_text'];
 
