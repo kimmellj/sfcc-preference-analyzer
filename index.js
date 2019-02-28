@@ -54,37 +54,37 @@
  * global,standard,,CustomProductListColumns,,custom.color:custom.refinementColor,,,
  * global,standard,,InstanceTimezone,,US/Eastern,,,
  */
-const fs = require('fs');
-const path = require('path');
 
-const log = require('pretty-log'); // Pretty Logging
-const prompt = require('prompt'); // Interactive Command Line Prompt
-const optimist = require('optimist'); // Handle the parameters passed to this script
+const path = require('path')
 
-const util = require('./util');
+const log = require('pretty-log') // Pretty Logging
+const prompt = require('prompt') // Interactive Command Line Prompt
+const optimist = require('optimist') // Handle the parameters passed to this script
 
-const outputDirectory = path.join(__dirname, 'output');
+const util = require('./util')
+
+const outputDirectory = path.join(__dirname, 'output')
 
 const schema = {
-    properties: {
-        folder: {
-            message: 'Site Export / Import to analyze preferences for',
-            required: true,
-            default: path.join(__dirname, 'demo_data')
-        },
-        name: {
-            pattern: /[A-Za-z0-9 \-_]/,
-            message: 'What name should be used for the export files?',
-            default: 'code-base',
-            required: true
-        }
+  properties: {
+    folder: {
+      message: 'Site Export / Import to analyze preferences for',
+      required: true,
+      default: path.join(__dirname, 'demo_data')
+    },
+    name: {
+      pattern: /[A-Za-z0-9 \-_]/,
+      message: 'What name should be used for the export files?',
+      default: 'code-base',
+      required: true
     }
-};
+  }
+}
 
 // Allows users to auto-fill answers for the prompt: node ./bin/preference-analysis/index.js --folder=./sites/site_template --name=code-base
-prompt.override = optimist.argv;
+prompt.override = optimist.argv
 
-prompt.start();
+prompt.start()
 
 /**
  * Prompt the user for the necessary variables then:
@@ -94,21 +94,19 @@ prompt.start();
  * - Generate XLS from the CSV
  */
 prompt.get(schema, function (err, results) {
-    if (err) {
-        log.error(err);
-        return;
-    }
+  if (err) {
+    log.error(err)
+    return
+  }
 
-    const metaData = util.analyzeMeta(results.folder);
+  const metaData = util.analyzeMeta(results.folder)
 
-    const preferences = util.analyzeEnvironment(results.folder, metaData);
+  const preferences = util.analyzeEnvironment(results.folder, metaData)
+  const preferencesCSV = util.generateCSV(preferences)
 
-    fs.writeFileSync(path.join(__dirname, `report-${results.name}.json`), JSON.stringify(preferences, null, 2));
+  util.saveCSV(path.join(outputDirectory, `report-${results.name}.csv`), preferencesCSV)
+  util.saveXLS(path.join(outputDirectory, `report-${results.name}.xls`), preferencesCSV)
+  util.saveJSON(path.join(outputDirectory, `report-${results.name}.json`), preferences)
 
-    const preferencesCSV = util.generateCSV(preferences);
-    util.saveCSV(results.name, preferencesCSV);
-
-    util.saveXLS(results.name, preferencesCSV);
-
-    log.success(`Reports have been successfully saved to: ${path.join(__dirname, 'report-*')}`);
-});
+  log.success(`Reports have been successfully saved to: ${path.join(__dirname, 'report-*')}`)
+})
